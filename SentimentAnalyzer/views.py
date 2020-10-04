@@ -8,10 +8,10 @@ import sys, tweepy
 class  TwitterTweets():
 
 	def __init__(self):
-		API_key = "HulhTW9uuqdlykNbMHp86vJrH"
-		API_secret = 'jBOTSUhz7VkozRtQFJGin1AzHvmBQ7T6e7uIV4YmSMvktJqKLj'
-		Access_token = '900287585792266240-AZfFrOVorLmXVCdjiEFbvBkqDQmK5tA'
-		Access_token_secret = 'yCzgaokBZR7RHWT1UqeGSGAqwXJ4kaxPt7zb58XvxL1yq'
+		API_key = //Insert from Twitter Dev
+		API_secret = //Insert from Twitter Dev
+		Access_token = //Insert from Twitter Dev
+		Access_token_secret = //Insert from Twitter Dev
 		self.auth = tweepy.OAuthHandler(API_key, API_secret)
 		self.auth.set_access_token(Access_token, Access_token_secret)
 		self.api = API(self.auth)
