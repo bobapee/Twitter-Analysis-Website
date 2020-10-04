@@ -1,0 +1,9 @@
+<html>
+	<body>
+		<form action = "search" method="post">
+			{% csrf_token %}
+			{{form.as_p}}
+			<button type = "submit"> Analyze </button>
+		</form>
+	</body>
+</html>
