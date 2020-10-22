@@ -8,19 +8,16 @@ import sys, tweepy
 class  TwitterTweets():
 
 	def __init__(self):
-		API_key = //Insert from Twitter Dev
-		API_secret = //Insert from Twitter Dev
-		Access_token = //Insert from Twitter Dev
-		Access_token_secret = //Insert from Twitter Dev
+		API_key = "HulhTW9uuqdlykNbMHp86vJrH"
+		API_secret = 'jBOTSUhz7VkozRtQFJGin1AzHvmBQ7T6e7uIV4YmSMvktJqKLj'
+		Access_token = '900287585792266240-AZfFrOVorLmXVCdjiEFbvBkqDQmK5tA'
+		Access_token_secret = 'yCzgaokBZR7RHWT1UqeGSGAqwXJ4kaxPt7zb58XvxL1yq'
 		self.auth = tweepy.OAuthHandler(API_key, API_secret)
 		self.auth.set_access_token(Access_token, Access_token_secret)
-		self.api = API(self.auth)
-
-	def remove_unnecessary_symbols(self, tweet):
-		  return ' '.join(re.sub("(@[A-Za-z0-9]+)|([^0-9A-Za-z \t])|(\w+:\/\/\S+)", " ", tweet).split())
+		self.api = tweepy.API(self.auth)
 
 	def get_sentiment(self, tweet):
-		analysis = TextBlob(self.remove_unnecessary_symbols(tweet))
+		analysis = TextBlob(tweet)
 		if analysis.sentiment.polarity > 0:
 			return 'Positive'
 		elif analysis.sentiment.polarity == 0:
@@ -30,18 +27,13 @@ class  TwitterTweets():
 
 
 	def get_tweets(self, query, count):
-		tweets = []
-		obtain_tweets = self.api.search(query, count)
+
+		obtain_tweets = tweepy.Cursor(self.api.search, q = query, lang = 'en').items(count)
+		parsed_tweet = {}
 		for tweet in obtain_tweets:
-			parsed_tweet = {}
-			parsed_tweet['text'] = tweet.text
-			parsed_tweet['sentiment'] = self.get_sentiment(tweet.text)
-			if tweet.retweet_count > 0:
-				if parsed_tweet not in tweets:
-					tweets.append(parsed_tweet)
-			else:
-				tweets.append(parsed_tweet)
-		return tweets
+			
+			parsed_tweet[tweet.text] = self.get_sentiment(tweet.text)
+		return parsed_tweet
 
 
 def show(request):
@@ -53,25 +45,27 @@ def graph_sentiment(request):
 	neg = 0
 	neu = 0
 	if request.method == 'POST':
-		api = TwitterTweets
+		api = TwitterTweets()
 		q = request.POST['tweet_search']
-		tweets = api.get_tweets(q, count = 100)
+		tweets = api.get_tweets(query = q, count = 50)
 
-		for tweet in tweets:
-			if tweet['sentiment'] == 'Positive':
+		for value in tweets.values():
+			if value == 'Positive':
 				pos = pos + 1
 
-			if tweet['sentiment'] == 'Negative':
+			if value == 'Negative':
 				neg = neg + 1
 
-			if tweet['sentiment'] == 'Neutral':
+			if value == 'Neutral':
 				neu = neu + 1
+
+
 
 		labels = ['Positive', 'Negative', 'Neutral']
 		data = [pos, neg, neu]
 		return render(request, 'pie-chart.html', {
 		'labels': labels,
 		'data' : data,
+		'tweets': tweets
 		})
-
 
