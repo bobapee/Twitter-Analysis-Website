@@ -1,4 +1,4 @@
 from django import forms
 
-class SearchForm(form.forms):
-	tweet_search = forms.CharField(label = 'Type the word or phrase that you want to analyze ', max_length = 50)
+class SearchForm(forms.Form):
+	tweet_search = forms.CharField(max_length = 50, widget = forms.TextInput(attrs={'placeholder' : 'Word or Tweet here...'}))
