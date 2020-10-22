@@ -1,42 +1,90 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <style>
+    *
+    {
+      background-color: #151515;
+    }
+    h1 {text-align: center;}
+    p {
+      font-family: Impact, Charcoal, sans-serif
+    }
+    ul
+    {
+      color: white;
+    }
+    li
+    {
+      color: white;
+    }
+    h1
+    {
+      color: white;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: white;
+    }
+
+    /* The grid: Three equal columns that floats next to each other */
+    .column {
+      float: left;
+      width: 30.7%;
+      padding: 20px;
+      text-align: center;
+      font-size: 25px;
+      cursor: pointer;
+      color: #151515;
+    }
+
+    .containerTab {
+      padding: 20px;
+      color: white;
+
+    }
+
+    /* Clear floats after the columns */
+    .row:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+
+    /* Closable button inside the container tab */
+    .closebtn {
+      float: right;
+      color: white;
+      font-size: 35px;
+      cursor: pointer;
+    }
+  </style>
   <title>Pie chart of Twitter Analysis</title>
 </head>
 <body>
-  <div id="canvas-holder" style="width:40%">
-    <div class="chartjs-size-monitor">
-      <div class="chartjs-size-monitor-expand">
-        <div class=""></div>
-      </div>
-
-      <div class="chartjs-size-monitor-shrink">
-        <div class=""></div>
-      </div>
-    </div>
-    <canvas id="chart-area" style="display: block; width: 204px; height: 102px;" width="204" height="102" class="chartjs-render-monitor"></canvas>
+{% block content %}
+  <div id="container" style="width: 75%;padding-left:  12%; padding-bottom: 5%">
+        <h1>
+    Tweet Analysis
+  </h1>
+    <canvas id="pie-chart"></canvas>
   </div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
   <script>
-var config = {
+
+    var config = {
       type: 'pie',
       data: {
         datasets: [{
-          data: 
-          [ {{data}}, ]
+          data: {{ data|safe }},
           backgroundColor: [
-            window.chartColors.red,
-            window.chartColors.yellow,
-            window.chartColors.green,
-            ],
-          label: 'Tweet Analysis'
+            '#008000', '#FF0000', '#FFFF00',
+          ],
+          label: 'Population'
         }],
-        labels: [
-          'Positive',
-          'Negative',
-          'Neutral',
-        ]
+        labels: {{ labels|safe }}
       },
       options: {
         responsive: true
@@ -44,9 +92,70 @@ var config = {
     };
 
     window.onload = function() {
-      var ctx = document.getElementById('chart-area').getContext('2d');
+      var ctx = document.getElementById('pie-chart').getContext('2d');
       window.myPie = new Chart(ctx, config);
     };
-    </script>
+
+  </script>
+
+
+
+
+<body>
+
+<div style="text-align:center">
+  <p>Click a box below:</p>
+</div>
+
+<!-- Three columns -->
+<div class="row">
+  <div class="column" onclick="openTab('b1');" style="background:   #404040; border-style: solid; border-color: white">
+    Positive Tweets
+  </div>
+  <div class="column" onclick="openTab('b2');" style="background:   #404040; border-style: solid; border-color: white">
+    Negative Tweets
+  </div>
+  <div class="column" onclick="openTab('b3');" style="background:   #404040; border-style: solid; border-color: white">
+    Neutral Tweets
+  </div>
+</div>
+
+<!-- Full-width columns: (hidden by default) -->
+<div id="b1" class="containerTab" style="display:none;background:#151515">
+  <span onclick="this.parentElement.style.display='none'" class="closebtn">&times;</span>
+  {% endblock %}
+<ul>
+{% for x, y in tweets.items %}
+<li>{{x}}</li>
+<li>{{y}}</li>
+<br>
+{% endfor %}
+</ul>
+</div>
+
+<div id="b2" class="containerTab" style="display:none;background:#151515">
+  <span onclick="this.parentElement.style.display='none'" class="closebtn">&times;</span>
+  <h2>Box 2</h2>
+  <p>Lorem ipsum dolor sit amet, te quo doctus abhorreant, et pri deleniti intellegat, te sanctus inermis ullamcorper nam. Ius error diceret deseruisse ad</p>
+</div>
+
+<div id="b3" class="containerTab" style="display:none;background:#151515">
+  <span onclick="this.parentElement.style.display='none'" class="closebtn">&times;</span>
+  <h2>Box 3</h2>
+  <p>Lorem ipsum dolor sit amet, te quo doctus abhorreant, et pri deleniti intellegat, te sanctus inermis ullamcorper nam. Ius error diceret deseruisse ad</p>
+</div>
+
+<script>
+function openTab(tabName) {
+  var i, x;
+  x = document.getElementsByClassName("containerTab");
+  for (i = 0; i < x.length; i++) {
+    x[i].style.display = "none";
+  }
+  document.getElementById(tabName).style.display = "block";
+}
+</script>
+
+</body>
   </body>
 </html>
